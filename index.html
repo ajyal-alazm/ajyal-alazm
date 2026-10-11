@@ -53,7 +53,7 @@ button{cursor:pointer;border:0}
 .field:focus{border-color:var(--orange)}
 .searchbar .field:first-child{flex:1;min-width:220px}
 .searchbar select{min-width:150px}
-.players{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.players{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.players-more{display:flex;justify-content:center;margin:22px 0}.players-more button{min-width:180px}
 .player-card{background:linear-gradient(160deg,#191e28,#12151b);border:1px solid var(--line);border-radius:19px;overflow:hidden;transition:.2s}
 .player-card:hover{transform:translateY(-3px);border-color:#ff7a1a80}
 .player-banner{height:100px;background:linear-gradient(120deg,#263b58,#17202d 65%,#4b281b);position:relative}
@@ -141,7 +141,7 @@ button{cursor:pointer;border:0}
 <section id="playersSection">
   <div class="section-head"><div><h2>دليل اللاعبين</h2><p>ابحث عن اللاعب واستعرض ملفه الرياضي المنشور.</p></div><span class="tag orange" id="resultCount">0 لاعب</span></div>
   <div class="searchbar"><input id="searchInput" class="field" placeholder="ابحث باسم اللاعب..." aria-label="ابحث باسم اللاعب"><select id="categoryFilter" class="field"><option value="">كل الفئات</option><option>الصغار</option><option>الوسط</option><option>الكبار</option></select><select id="branchFilter" class="field"><option value="">كل الفروع</option><option>مادبا</option><option>خلدا</option><option>ذيبان</option></select><button class="secondary" id="clearFilters">مسح الفلاتر</button></div>
-  <div class="players" id="playersGrid"></div>
+  <div class="players" id="playersGrid"></div><div class="players-more" id="playersMoreWrap"><button class="primary" id="playersMoreBtn" type="button">إظهار كل اللاعبين</button></div>
 </section><section id="gallerySection"><div class="section-head"><div><h2>ألبوم صور العزم</h2><p>لقطات من التدريبات والفعاليات والبطولات.</p></div></div><div id="galleryGrid" class="gallery-grid"><div class="empty">جارٍ تحميل الصور...</div></div></section><section id="newsSection"><div class="section-head"><div><h2>أخبار العزم</h2><p>أخبار الأكاديمية وفعالياتها وإنجازاتها.</p></div></div><div id="newsGrid" class="news-grid"><div class="empty">جارٍ تحميل الأخبار...</div></div></section>
 
 <section id="feedbackSection">
@@ -168,7 +168,7 @@ const SUPABASE_URL='https://mulodqwjslfyapgupbgw.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_p_aOdpenlCrTefBdx2miqQ_hyPZPsNs';
 const STORAGE_BUCKET='player-images';
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-let players=[], editingId=null, adminMode=false, currentUser=null, newsItems=[], galleryItems=[];
+let players=[], editingId=null, adminMode=false, currentUser=null, newsItems=[], galleryItems=[], showAllPlayers=false;
 const $=id=>document.getElementById(id);
 function escapeHtml(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function toast(msg){$('toast').textContent=msg;$('toast').classList.remove('hidden');setTimeout(()=>$('toast').classList.add('hidden'),3800);}
@@ -229,7 +229,9 @@ async function refreshData(){
 function render(){
  const q=$('searchInput').value.trim().toLowerCase(),cat=$('categoryFilter').value,branch=$('branchFilter').value;
  const visible=players.filter(p=>p.published!==false&&(!q||p.name.toLowerCase().includes(q))&&(!cat||p.category===cat)&&(!branch||p.branch===branch));
- $('playersGrid').innerHTML=visible.length?visible.map(p=>{const a=latestAssessment(p);const photo=p.photo?`<img class="player-avatar" src="${escapeHtml(p.photo)}" alt="صورة ${escapeHtml(p.name)}">`:`<div class="player-avatar placeholder">${escapeHtml(p.name.trim().charAt(0)||'ل')}</div>`;return `<article class="player-card"><div class="player-banner">${photo}</div><div class="player-content"><h3>${escapeHtml(p.name)}</h3><div class="meta"><span class="tag orange">${escapeHtml(p.category||'غير محدد')}</span><span class="tag">${escapeHtml(p.position||'غير محدد')}</span><span class="tag">${escapeHtml(p.branch||'غير محدد')}</span></div><div class="player-foot"><div class="score">${Number(a?.overall??p.score??0)}<small> / 100</small></div><button class="secondary" onclick="openPlayer('${p.id}')">عرض الملف ←</button></div></div></article>`}).join(''):`<div class="empty">${players.length?'لا توجد نتائج مطابقة. جرّب تغيير كلمات البحث أو الفلاتر.':'لا توجد ملفات لاعبين منشورة حتى الآن.'}</div>`;
+ const shown=showAllPlayers||q||cat||branch?visible:visible.slice(0,6);
+ $('playersGrid').innerHTML=shown.length?shown.map(p=>{const a=latestAssessment(p);const photo=p.photo?`<img class="player-avatar" src="${escapeHtml(p.photo)}" alt="صورة ${escapeHtml(p.name)}">`:`<div class="player-avatar placeholder">${escapeHtml(p.name.trim().charAt(0)||'ل')}</div>`;return `<article class="player-card"><div class="player-banner">${photo}</div><div class="player-content"><h3>${escapeHtml(p.name)}</h3><div class="meta"><span class="tag orange">${escapeHtml(p.category||'غير محدد')}</span><span class="tag">${escapeHtml(p.position||'غير محدد')}</span><span class="tag">${escapeHtml(p.branch||'غير محدد')}</span></div><div class="player-foot"><div class="score">${Number(a?.overall??p.score??0)}<small> / 100</small></div><button class="secondary" onclick="openPlayer('${p.id}')">عرض الملف ←</button></div></div></article>`}).join(''):`<div class="empty">${players.length?'لا توجد نتائج مطابقة. جرّب تغيير كلمات البحث أو الفلاتر.':'لا توجد ملفات لاعبين منشورة حتى الآن.'}</div>`;
+ $('playersMoreWrap').classList.toggle('hidden',visible.length<=6||!!q||!!cat||!!branch);$('playersMoreBtn').textContent=showAllPlayers?'إظهار أقل':'إظهار كل اللاعبين';
  $('resultCount').textContent=visible.length+' لاعب';$('statPlayers').textContent=players.filter(p=>p.published!==false).length;$('statCategories').textContent=new Set(players.filter(p=>p.published!==false).map(p=>p.category).filter(Boolean)).size;$('statAssessments').textContent=players.reduce((n,p)=>n+(p.assessments||[]).length,0);
 }
 function openPlayer(id){
@@ -346,7 +348,8 @@ $('adminOpen').addEventListener('click',async()=>{await checkAdmin();if(adminMod
 $('modalClose').addEventListener('click',closeModal);
 $('modalBackdrop').addEventListener('click',e=>{if(e.target===$('modalBackdrop'))closeModal()});
 ['searchInput','categoryFilter','branchFilter'].forEach(id=>$(id).addEventListener(id==='searchInput'?'input':'change',render));
-$('clearFilters').addEventListener('click',()=>{$('searchInput').value='';$('categoryFilter').value='';$('branchFilter').value='';render()});
+$('clearFilters').addEventListener('click',()=>{$('searchInput').value='';$('categoryFilter').value='';$('branchFilter').value='';showAllPlayers=false;render()});
+$('playersMoreBtn').addEventListener('click',()=>{showAllPlayers=!showAllPlayers;render();if(!showAllPlayers)$('playersSection').scrollIntoView({behavior:'smooth',block:'start'});});
 $('feedbackForm').addEventListener('submit',e=>{e.preventDefault();const f=e.target;const topic=f.elements.topic.value.trim();const details=f.elements.details.value.trim();const message='أقدم ملاحظتي بخصوص '+topic+'\\n\\n'+details;window.open('https://wa.me/962777729043?text='+encodeURIComponent(message),'_blank','noopener');});
 $('year').textContent=new Date().getFullYear();
 (async()=>{await checkAdmin();await refreshData();await loadNewsAndGallery();await loadGift();if(new URLSearchParams(location.search).get('admin')==='1'&&adminMode)adminPanel();})();
