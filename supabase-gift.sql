@@ -21,7 +21,7 @@ drop policy if exists "Public can read gift status" on public.academy_gift;
 create policy "Public can read gift status"
 on public.academy_gift for select
 to anon, authenticated
-using (true);
+using (is_open = true);
 
 drop policy if exists "Admins manage surprise gift" on public.academy_gift;
 create policy "Admins manage surprise gift"
