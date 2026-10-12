@@ -34,3 +34,7 @@ with check (
       and profiles.role = 'admin'
   )
 );
+
+-- منح صلاحيات SQL اللازمة؛ سياسات RLS أعلاه تظل مسؤولة عن تحديد الصفوف المسموح بها.
+grant select on table public.academy_awards to anon, authenticated;
+grant insert, update, delete on table public.academy_awards to authenticated;
