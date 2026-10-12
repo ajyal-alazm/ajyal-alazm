@@ -45,6 +45,7 @@ button{cursor:pointer;border:0}
 .stat .num{font-size:28px;font-weight:900}
 .stat .label{color:var(--muted);font-size:13px}
 .stat .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--orange);margin-left:6px}
+.awards-section{margin:8px auto 30px}.award-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.award-card{position:relative;overflow:hidden;background:linear-gradient(145deg,#211a16,#151922 75%);border:1px solid #ff7a1a45;border-radius:18px;padding:18px;min-width:0}.award-card:before{content:"";position:absolute;width:110px;height:110px;border:1px solid #ff7a1a30;border-radius:50%;left:-30px;top:-35px;box-shadow:0 0 0 14px #ff7a1a08}.award-title{color:#ffb17c;font-weight:800;font-size:13px}.award-player{display:flex;align-items:center;gap:12px;margin-top:12px;position:relative}.award-photo{width:62px;height:62px;flex:0 0 62px;object-fit:cover;border-radius:16px;border:2px solid var(--orange);background:#252b36}.award-name{font-weight:900;font-size:16px;overflow-wrap:anywhere}.award-meta{font-size:12px;color:var(--muted);margin-top:3px}.award-empty{color:var(--muted);font-size:13px;line-height:1.8;margin-top:12px}.badge-row{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}.achievement-badge{display:inline-flex;align-items:center;gap:4px;background:#ff7a1a18;border:1px solid #ff7a1a45;color:#ffc49e;border-radius:99px;padding:4px 8px;font-size:11px;font-weight:800}.progress-callout{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:linear-gradient(120deg,#171d27,#241a15);border:1px solid var(--line);border-radius:18px;padding:18px;margin:22px 0 32px}.progress-callout p{margin:4px 0 0;color:var(--muted);font-size:13px;line-height:1.8}@media(max-width:650px){.award-grid{grid-template-columns:1fr}.award-card{padding:15px}}
 .section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:34px 0 18px}
 .section-head h2{margin:0;font-size:25px}
 .section-head p{color:var(--muted);margin:5px 0 0;font-size:14px}
@@ -132,6 +133,10 @@ button{cursor:pointer;border:0}
   <div class="hero-actions"><button class="primary" data-scroll="playersSection">استكشف اللاعبين ←</button><button class="secondary" data-action="about">تعرف على الأكاديمية</button></div></div>
   <div class="hero-card"><div class="hero-ball">🦁</div><h3>كل لاعب لديه قصة تطور</h3><p>التزام • مهارة • روح الفريق</p><div style="display:flex;gap:8px;margin-top:20px;position:relative"><span class="tag orange">تقييمات دورية</span><span class="tag">متابعة مستمرة</span></div></div>
 </section>
+<section id="awardsSection" class="awards-section">
+  <div class="section-head"><div><h2>🏆 نجوم العزم</h2><p>نحتفي بالاجتهاد والتطور كل يوم وكل أسبوع وكل شهر.</p></div></div>
+  <div id="awardsGrid" class="award-grid"><div class="award-card"><div class="award-title">⭐ نجم اليوم</div><div class="award-empty">جارٍ تحميل الاختيارات...</div></div><div class="award-card"><div class="award-title">🌟 نجم الأسبوع</div><div class="award-empty">جارٍ تحميل الاختيارات...</div></div><div class="award-card"><div class="award-title">🏅 نجم الشهر</div><div class="award-empty">جارٍ تحميل الاختيارات...</div></div></div>
+</section>
 <section class="stats" aria-label="إحصائيات">
 <div class="stat"><div class="num" id="statPlayers">0</div><div class="label"><span class="dot"></span>اللاعبون المنشورون</div></div>
 <div class="stat"><div class="num" id="statCategories">0</div><div class="label"><span class="dot" style="background:var(--blue)"></span>الفئات العمرية</div></div>
@@ -142,7 +147,9 @@ button{cursor:pointer;border:0}
   <div class="section-head"><div><h2>دليل اللاعبين</h2><p>ابحث عن اللاعب واستعرض ملفه الرياضي المنشور.</p></div><span class="tag orange" id="resultCount">0 لاعب</span></div>
   <div class="searchbar"><input id="searchInput" class="field" placeholder="ابحث باسم اللاعب..." aria-label="ابحث باسم اللاعب"><select id="categoryFilter" class="field"><option value="">كل الفئات</option><option>الصغار</option><option>الوسط</option><option>الكبار</option></select><select id="branchFilter" class="field"><option value="">كل الفروع</option><option>مادبا</option><option>خلدا</option><option>ذيبان</option></select><button class="secondary" id="clearFilters">مسح الفلاتر</button></div>
   <div class="players" id="playersGrid"></div><div class="players-more" id="playersMoreWrap"><button class="primary" id="playersMoreBtn" type="button">إظهار كل اللاعبين</button></div>
-</section><section id="gallerySection"><div class="section-head"><div><h2>ألبوم صور العزم</h2><p>لقطات من التدريبات والفعاليات والبطولات.</p></div></div><div id="galleryGrid" class="gallery-grid"><div class="empty">جارٍ تحميل الصور...</div></div><div class="gallery-more hidden" id="galleryMoreWrap"><button class="primary" id="galleryMoreBtn" type="button">إظهار كل الصور</button></div></section><section id="newsSection"><div class="section-head"><div><h2>أخبار العزم</h2><p>أخبار الأكاديمية وفعالياتها وإنجازاتها.</p></div></div><div id="newsGrid" class="news-grid"><div class="empty">جارٍ تحميل الأخبار...</div></div></section>
+</section>
+<section class="progress-callout"><div><strong>📈 رحلة تطور اللاعب</strong><p>افتح الملف الرياضي لأي لاعب لمشاهدة التقييمات الشهرية ومخطط تطوره ومهاراته.</p></div><button class="primary" data-scroll="playersSection">استعرض ملفات اللاعبين ←</button></section>
+<section id="gallerySection"><div class="section-head"><div><h2>ألبوم صور العزم</h2><p>لقطات من التدريبات والفعاليات والبطولات.</p></div></div><div id="galleryGrid" class="gallery-grid"><div class="empty">جارٍ تحميل الصور...</div></div><div class="gallery-more hidden" id="galleryMoreWrap"><button class="primary" id="galleryMoreBtn" type="button">إظهار كل الصور</button></div></section><section id="newsSection"><div class="section-head"><div><h2>أخبار العزم</h2><p>أخبار الأكاديمية وفعالياتها وإنجازاتها.</p></div></div><div id="newsGrid" class="news-grid"><div class="empty">جارٍ تحميل الأخبار...</div></div></section>
 
 <section id="feedbackSection">
   <div class="section-head"><div><h2>إرسال الملاحظات</h2><p>شاركنا ملاحظتك أو اقتراحك مباشرة مع إدارة الأكاديمية عبر واتساب.</p></div></div>
@@ -168,7 +175,7 @@ const SUPABASE_URL='https://mulodqwjslfyapgupbgw.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_p_aOdpenlCrTefBdx2miqQ_hyPZPsNs';
 const STORAGE_BUCKET='player-images';
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-let players=[], editingId=null, adminMode=false, currentUser=null, newsItems=[], galleryItems=[], showAllPlayers=false, showAllGallery=false;
+let players=[], editingId=null, adminMode=false, currentUser=null, newsItems=[], galleryItems=[], awards={day:null,week:null,month:null}, showAllPlayers=false, showAllGallery=false;
 const $=id=>document.getElementById(id);
 function escapeHtml(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function toast(msg){$('toast').textContent=msg;$('toast').classList.remove('hidden');setTimeout(()=>$('toast').classList.add('hidden'),3800);}
@@ -225,12 +232,25 @@ async function refreshData(){
    players.forEach(p=>{const a=latestAssessment(p);p.score=a?Number(a.overall||0):0;});
  }
  render();
+ await loadAwards();
 }
+async function loadAwards(){
+ const grid=$('awardsGrid');if(!grid)return;
+ try{
+  const {data,error}=await supabaseClient.from('academy_awards').select('award_type,player_id,updated_at');
+  if(error)throw error;
+  awards={day:null,week:null,month:null};
+  (data||[]).forEach(a=>{const p=players.find(x=>String(x.id)===String(a.player_id)&&x.published!==false);if(p&&Object.prototype.hasOwnProperty.call(awards,a.award_type))awards[a.award_type]=p;});
+  const defs=[['day','⭐ نجم اليوم'],['week','🌟 نجم الأسبوع'],['month','🏅 نجم الشهر']];
+  grid.innerHTML=defs.map(([key,title])=>{const p=awards[key];if(!p)return '<article class="award-card"><div class="award-title">'+title+'</div><div class="award-empty">سيتم الإعلان عن النجم قريبًا بإذن الله.</div></article>';const photo=p.photo?'<img class="award-photo" src="'+escapeHtml(p.photo)+'" alt="صورة '+escapeHtml(p.name)+'">':'<div class="award-photo" style="display:grid;place-items:center;font-size:26px">⚽</div>';return '<article class="award-card"><div class="award-title">'+title+'</div><div class="award-player">'+photo+'<div><div class="award-name">'+escapeHtml(p.name)+'</div><div class="award-meta">'+escapeHtml(p.category||'')+' • '+escapeHtml(p.branch||'')+'</div><button class="small-btn" style="margin-top:8px" onclick="openPlayer(\''+p.id+'\')">عرض الملف</button></div></div></article>';}).join('');
+ }catch(e){console.warn('Awards unavailable',e);grid.innerHTML='<div class="award-card"><div class="award-title">🏆 نجوم العزم</div><div class="award-empty">تحتاج هذه الميزة إلى إعداد جدول الأوسمة في قاعدة البيانات. يمكن للإدارة إعداده من ملف supabase-awards.sql.</div></div>';}
+}
+function playerBadges(p){const a=latestAssessment(p)||{};const b=[];const overall=Number(a.overall||0);if(overall>=90)b.push('🏆 أداء متميز');else if(overall>=80)b.push('⭐ لاعب متميز');if(Number(a.teamwork||0)>=85)b.push('🤝 روح الفريق');if(Number(a.discipline||0)>=85)b.push('💪 انضباط');if(Number(a.speed||0)>=90)b.push('⚡ سرعة');if(Number(a.shooting||0)>=90)b.push('🎯 هداف واعد');return b.length?'<div class="badge-row">'+b.map(x=>'<span class="achievement-badge">'+x+'</span>').join('')+'</div>':'';}
 function render(){
  const q=$('searchInput').value.trim().toLowerCase(),cat=$('categoryFilter').value,branch=$('branchFilter').value;
  const visible=players.filter(p=>p.published!==false&&(!q||p.name.toLowerCase().includes(q))&&(!cat||p.category===cat)&&(!branch||p.branch===branch));
  const shown=showAllPlayers||q||cat||branch?visible:visible.slice(0,6);
- $('playersGrid').innerHTML=shown.length?shown.map(p=>{const a=latestAssessment(p);const photo=p.photo?`<img class="player-avatar" src="${escapeHtml(p.photo)}" alt="صورة ${escapeHtml(p.name)}">`:`<div class="player-avatar placeholder">${escapeHtml(p.name.trim().charAt(0)||'ل')}</div>`;return `<article class="player-card"><div class="player-banner">${photo}</div><div class="player-content"><h3>${escapeHtml(p.name)}</h3><div class="meta"><span class="tag orange">${escapeHtml(p.category||'غير محدد')}</span><span class="tag">${escapeHtml(p.position||'غير محدد')}</span><span class="tag">${escapeHtml(p.branch||'غير محدد')}</span></div><div class="player-foot"><div class="score">${Number(a?.overall??p.score??0)}<small> / 100</small></div><button class="secondary" onclick="openPlayer('${p.id}')">عرض الملف ←</button></div></div></article>`}).join(''):`<div class="empty">${players.length?'لا توجد نتائج مطابقة. جرّب تغيير كلمات البحث أو الفلاتر.':'لا توجد ملفات لاعبين منشورة حتى الآن.'}</div>`;
+ $('playersGrid').innerHTML=shown.length?shown.map(p=>{const a=latestAssessment(p);const photo=p.photo?`<img class="player-avatar" src="${escapeHtml(p.photo)}" alt="صورة ${escapeHtml(p.name)}">`:`<div class="player-avatar placeholder">${escapeHtml(p.name.trim().charAt(0)||'ل')}</div>`;return `<article class="player-card"><div class="player-banner">${photo}</div><div class="player-content"><h3>${escapeHtml(p.name)}</h3><div class="meta"><span class="tag orange">${escapeHtml(p.category||'غير محدد')}</span><span class="tag">${escapeHtml(p.position||'غير محدد')}</span><span class="tag">${escapeHtml(p.branch||'غير محدد')}</span></div>${playerBadges(p)}<div class="player-foot"><div class="score">${Number(a?.overall??p.score??0)}<small> / 100</small></div><button class="secondary" onclick="openPlayer('${p.id}')">عرض الملف ←</button></div></div></article>`}).join(''):`<div class="empty">${players.length?'لا توجد نتائج مطابقة. جرّب تغيير كلمات البحث أو الفلاتر.':'لا توجد ملفات لاعبين منشورة حتى الآن.'}</div>`;
  $('playersMoreWrap').classList.toggle('hidden',visible.length<=6||!!q||!!cat||!!branch);$('playersMoreBtn').textContent=showAllPlayers?'إظهار أقل':'إظهار كل اللاعبين';
  $('resultCount').textContent=visible.length+' لاعب';$('statPlayers').textContent=players.filter(p=>p.published!==false).length;$('statCategories').textContent=new Set(players.filter(p=>p.published!==false).map(p=>p.category).filter(Boolean)).size;$('statAssessments').textContent=players.reduce((n,p)=>n+(p.assessments||[]).length,0);
 }
@@ -265,7 +285,19 @@ async function checkAdmin(){
 function adminPanel(){
  if(!adminMode){adminLogin();return;}
  const rows=players.map(p=>`<div class="admin-row"><div><strong>${escapeHtml(p.name)}</strong><small>${escapeHtml(p.category||'')} • ${escapeHtml(p.branch||'')} • ${p.published?'منشور':'غير منشور'}</small></div><div class="admin-actions"><button class="small-btn" onclick="editPlayer('${p.id}')">تعديل</button><button class="small-btn" onclick="addMonthlyAssessment('${p.id}')">تقييم شهري</button><button class="small-btn danger" onclick="deletePlayer('${p.id}')">حذف</button></div></div>`).join('');
- openModal('لوحة إدارة الأكاديمية',`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px"><button class="primary" onclick="editPlayer(null)">＋ إضافة لاعب</button><button class="secondary" onclick="manageNews()">📰 إدارة الأخبار</button><button class="secondary" onclick="manageGallery()">🖼 إدارة الألبوم</button><button class="secondary" onclick="manageGift()">🎁 إدارة الهدية</button><button class="secondary" onclick="exportData()">تصدير نسخة احتياطية</button><button class="secondary" onclick="logoutAdmin()">تسجيل الخروج</button></div><div class="notice">البيانات تُحفظ في قاعدة Supabase المشتركة. لا تضع معلومات صحية أو مدرسية أو بيانات اتصال شخصية للأطفال في الحقول العامة. انشر الصور بعد موافقة ولي الأمر فقط.</div><div class="admin-list">${rows||'<div class="empty">لا يوجد لاعبون بعد. اضغط إضافة لاعب.</div>'}</div>`);
+ openModal('لوحة إدارة الأكاديمية',`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px"><button class="primary" onclick="editPlayer(null)">＋ إضافة لاعب</button><button class="secondary" onclick="manageNews()">📰 إدارة الأخبار</button><button class="secondary" onclick="manageGallery()">🖼 إدارة الألبوم</button><button class="secondary" onclick="manageGift()">🎁 إدارة الهدية</button><button class="secondary" onclick="manageAwards()">🏆 تعيين النجوم</button><button class="secondary" onclick="exportData()">تصدير نسخة احتياطية</button><button class="secondary" onclick="logoutAdmin()">تسجيل الخروج</button></div><div class="notice">البيانات تُحفظ في قاعدة Supabase المشتركة. لا تضع معلومات صحية أو مدرسية أو بيانات اتصال شخصية للأطفال في الحقول العامة. انشر الصور بعد موافقة ولي الأمر فقط.</div><div class="admin-list">${rows||'<div class="empty">لا يوجد لاعبون بعد. اضغط إضافة لاعب.</div>'}</div>`);
+}
+async function manageAwards(){
+ if(!adminMode){toast('سجّل الدخول بحساب المسؤول أولًا.');return;}
+ const published=players.filter(p=>p.published!==false);
+ if(!published.length){toast('انشر ملف لاعب واحد على الأقل أولًا.');return;}
+ const options='<option value="">— بدون اختيار —</option>'+published.map(p=>'<option value="'+escapeHtml(p.id)+'">'+escapeHtml(p.name)+' • '+escapeHtml(p.branch||'')+'</option>').join('');
+ const current=await supabaseClient.from('academy_awards').select('award_type,player_id');
+ if(current.error){toast('شغّل ملف supabase-awards.sql في SQL Editor أولًا.');return;}
+ const selected=Object.fromEntries((current.data||[]).map(x=>[x.award_type,x.player_id]));
+ openModal('تعيين نجوم العزم', '<p style="color:var(--muted);line-height:1.8">اختر لاعبًا منشورًا لكل لقب. التغييرات تظهر للزوار في بداية الموقع.</p><form id="awardsForm" class="form-grid"><label class="full">⭐ نجم اليوم<select class="field" name="day">'+options+'</select></label><label class="full">🌟 نجم الأسبوع<select class="field" name="week">'+options+'</select></label><label class="full">🏅 نجم الشهر<select class="field" name="month">'+options+'</select></label><button class="primary full">حفظ النجوم</button></form>');
+ const form=$('awardsForm');['day','week','month'].forEach(k=>{form.elements[k].value=selected[k]||'';});
+ form.addEventListener('submit',async e=>{e.preventDefault();const rows=['day','week','month'].filter(k=>form.elements[k].value).map(k=>({award_type:k,player_id:form.elements[k].value,updated_at:new Date().toISOString(),updated_by:currentUser.id}));const del=await supabaseClient.from('academy_awards').delete().in('award_type',['day','week','month']);if(del.error){toast('تعذر تحديث الأوسمة: '+del.error.message);return;}if(rows.length){const ins=await supabaseClient.from('academy_awards').insert(rows);if(ins.error){toast('تعذر حفظ النجوم: '+ins.error.message);return;}}await loadAwards();toast('تم حفظ نجوم العزم.');adminPanel();});
 }
 async function uploadImage(file,playerId){
  if(!file)return null;
@@ -353,7 +385,7 @@ $('playersMoreBtn').addEventListener('click',()=>{showAllPlayers=!showAllPlayers
 $('galleryMoreBtn').addEventListener('click',()=>{showAllGallery=!showAllGallery;const gg=$('galleryGrid');const items=showAllGallery?galleryItems:galleryItems.slice(0,16);gg.innerHTML=items.map(g=>'<img class="gallery-thumb" src="'+escapeHtml(g.image_url)+'" alt="'+escapeHtml(g.caption||'صورة من الأكاديمية')+'" data-full-image="'+escapeHtml(g.image_url)+'">').join('');$('galleryMoreBtn').textContent=showAllGallery?'إظهار أقل':'إظهار كل الصور';if(!showAllGallery)$('gallerySection').scrollIntoView({behavior:'smooth',block:'start'});});
 $('feedbackForm').addEventListener('submit',e=>{e.preventDefault();const f=e.target;const topic=f.elements.topic.value.trim();const details=f.elements.details.value.trim();const message='أقدم ملاحظتي بخصوص '+topic+'\\n\\n'+details;window.open('https://wa.me/962777729043?text='+encodeURIComponent(message),'_blank','noopener');});
 $('year').textContent=new Date().getFullYear();
-(async()=>{await checkAdmin();await refreshData();await loadNewsAndGallery();await loadGift();if(new URLSearchParams(location.search).get('admin')==='1'&&adminMode)adminPanel();})();
+(async()=>{await checkAdmin();await refreshData();await loadNewsAndGallery();await loadGift();await loadAwards();if(new URLSearchParams(location.search).get('admin')==='1'&&adminMode)adminPanel();})();
 </script>
 </body>
 </html>
