@@ -386,10 +386,17 @@ function addMonthlyAssessment(id){
  });
 }
 async function deletePlayer(id){
- const p=players.find(x=>x.id===id);if(!p||!confirm('هل تريد حذف ملف '+p.name+' نهائيًا؟'))return;
+ const p=players.find(x=>x.id===id);if(!p||!confirm('هل تريد حذف ملف '+p.name+' نهائيًا؟ سيتم حذف صوره المخزنة أيضًا.'))return;
+ const [{data:photoRows,error:photoError},{data:profileRow,error:profileError}]=await Promise.all([
+  supabaseClient.from('player_photos').select('image_url').eq('player_id',id),
+  supabaseClient.from('players').select('photo_url').eq('id',id).maybeSingle()
+ ]);
+ if(photoError||profileError){toast('تعذر تجهيز حذف الصور: '+(photoError||profileError).message);return;}
  const {error}=await supabaseClient.from('players').delete().eq('id',id);
  if(error){toast('تعذر الحذف: '+error.message);return;}
- await refreshData();adminPanel();toast('تم حذف ملف اللاعب.');
+ for(const ph of (photoRows||[]))if(ph.image_url)await removeStoredImage(ph.image_url);
+ if(profileRow?.photo_url)await removeStoredImage(profileRow.photo_url);
+ await refreshData();adminPanel();toast('تم حذف ملف اللاعب وصوره المخزنة.');
 }
 function exportData(){
  const blob=new Blob([JSON.stringify(players,null,2)],{type:'application/json'});
