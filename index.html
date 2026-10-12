@@ -360,7 +360,7 @@ function editPlayer(id){
    if(countError)throw countError;
    const existingProfilePhoto=id?(players.find(x=>x.id===id)?.photo||''):'';
    const currentTotal=(albumCount||0)+(existingProfilePhoto?1:0);
-   const finalTotal=currentTotal+(photoFile&&!existingProfilePhoto?1:0)+(albumFiles.length)-(photoFile&&existingProfilePhoto?1:0);
+   const finalTotal=currentTotal+(photoFile&&!existingProfilePhoto?1:0)+albumFiles.length;
    if(finalTotal>10)throw new Error('الحد الأقصى 10 صور لكل لاعب شاملًا صورة الملف الشخصي. لديك حاليًا '+currentTotal+' صورة؛ اختر عددًا أقل.');
    if(photoFile){const oldPhoto=existingProfilePhoto;const photoUrl=await uploadImage(photoFile,playerId);const upd=await supabaseClient.from('players').update({photo_url:photoUrl}).eq('id',playerId);if(upd.error){await removeStoredImage(photoUrl);throw upd.error;}if(oldPhoto)await removeStoredImage(oldPhoto);}
    for(const file of albumFiles){const imageUrl=await uploadImage(file,playerId);const ins=await supabaseClient.from('player_photos').insert({player_id:playerId,image_url:imageUrl,caption:null,published:payload.published});if(ins.error){await removeStoredImage(imageUrl);throw ins.error;}}
