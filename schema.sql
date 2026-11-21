@@ -150,3 +150,22 @@ with check (public.is_admin());
 -- update public.profiles set role = 'admin' where id = '<AUTH_USER_UUID>';
 -- Create the matching profiles row for that auth user first.
 -- Do not expose service_role keys in browser code.
+
+
+-- Explicit table privileges for the browser's public publishable key.
+-- Row Level Security policies above still decide which rows each role can access.
+grant usage on schema public to anon, authenticated;
+grant select on table
+  public.players,
+  public.player_assessments,
+  public.player_photos,
+  public.parent_reviews
+to anon, authenticated;
+grant select, insert, update, delete on table
+  public.players,
+  public.player_assessments,
+  public.player_photos,
+  public.parent_reviews,
+  public.profiles
+to authenticated;
+grant execute on function public.is_admin() to authenticated;
