@@ -390,7 +390,7 @@ function addMonthlyAssessment(id){
   // The original schema does not define a UNIQUE constraint on (player_id, assessment_date),
   // so PostgREST upsert(onConflict) can fail. Update an existing monthly row, or insert a new one.
   const {data:existing,error:lookupError}=await supabaseClient.from('player_assessments')
-    .select('id').eq('player_id',id).eq('assessment_date',record.assessment_date).maybeSingle();
+    .select('id').eq('player_id',id).eq('assessment_date',record.assessment_date).order('created_at',{ascending:false}).limit(1).maybeSingle();
   if(lookupError){toast('تعذر التحقق من التقييم السابق: '+lookupError.message);return;}
   const saveResult=existing
     ? await supabaseClient.from('player_assessments').update(record).eq('id',existing.id)
