@@ -387,15 +387,8 @@ function addMonthlyAssessment(id){
  $('monthlyForm').addEventListener('submit',async e=>{
   e.preventDefault();const f=new FormData(e.target);const month=String(f.get('date'));
   const record={player_id:id,assessment_date:month+'-01',overall:Number(f.get('overall')),speed:Number(f.get('speed')),shooting:Number(f.get('shooting')),passing:Number(f.get('passing')),flexibility:Number(f.get('flexibility')),balance:Number(f.get('balance')),endurance:Number(f.get('endurance')),teamwork:Number(f.get('teamwork')),individual_skills:Number(f.get('individual')),discipline:Number(f.get('discipline')),coach_notes:String(f.get('notes')||'').trim()||null,created_by:currentUser?.id||null};
-  // The original schema does not define a UNIQUE constraint on (player_id, assessment_date),
-  // so PostgREST upsert(onConflict) can fail. Update an existing monthly row, or insert a new one.
-  const {data:existing,error:lookupError}=await supabaseClient.from('player_assessments')
-    .select('id').eq('player_id',id).eq('assessment_date',record.assessment_date).order('created_at',{ascending:false}).limit(1).maybeSingle();
-  if(lookupError){toast('تعذر التحقق من التقييم السابق: '+lookupError.message);return;}
-  const saveResult=existing
-    ? await supabaseClient.from('player_assessments').update(record).eq('id',existing.id)
-    : await supabaseClient.from('player_assessments').insert(record);
-  if(saveResult.error){toast('تعذر حفظ التقييم: '+saveResult.error.message);return;}
+  const {error}=await supabaseClient.from('player_assessments').upsert(record,{onConflict:'player_id,assessment_date'});
+  if(error){toast('تعذر حفظ التقييم: '+error.message);return;}
   await refreshData();toast('تم حفظ التقييم الشهري.');adminPanel();
  });
 }
